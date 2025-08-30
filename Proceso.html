@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Qué es un Proceso?</title>
+    <!-- Incluir Tailwind CSS desde CDN para un diseño rápido y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.5s ease-in-out;
+        }
+        .step-transition {
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .step-hide {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Contenedor principal de la tarjeta interactiva -->
+    <div id="interactiveCard" class="bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl max-w-sm sm:max-w-md w-full text-center transform transition-all duration-500 hover:scale-105">
+        
+        <!-- Título principal de la sección, ahora con ID para actualizarlo -->
+        <h1 id="mainTitle" class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4">¿Qué es un Proceso?</h1>
+        <hr class="w-16 h-1 mx-auto bg-blue-500 border-0 rounded my-6">
+
+        <!-- Contenedor para el contenido dinámico del paso -->
+        <div id="content" class="flex flex-col items-center">
+            <!-- Icono o representación visual del paso actual -->
+            <div id="visual" class="text-6xl sm:text-7xl mb-6 step-transition text-blue-500"></div>
+            <!-- Título del paso actual -->
+            <h2 id="stepTitle" class="text-xl sm:text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-2 step-transition"></h2>
+            <!-- Descripción del paso actual -->
+            <p id="description" class="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-8 step-transition leading-relaxed"></p>
+        </div>
+
+        <!-- Botón para avanzar al siguiente paso -->
+        <button id="nextBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50">
+            Comenzar
+        </button>
+    </div>
+
+    <script>
+        // Array de objetos que representa cada paso del proceso
+        const steps = [
+            {
+                visual: "💡",
+                sectionTitle: "¿Qué es un Proceso?",
+                title: "Idea o Entrada",
+                description: "Todo proceso comienza con una idea, una necesidad o una materia prima (entrada). Es el punto de partida."
+            },
+            {
+                visual: "⚙️",
+                sectionTitle: "¿Qué es un Proceso?",
+                title: "Conjunto de Actividades",
+                description: "Luego, se realiza una serie de acciones o tareas de manera organizada y secuencial. Estas actividades transforman la entrada."
+            },
+            {
+                visual: "🚀",
+                sectionTitle: "¿Qué es un Proceso?",
+                title: "Transformación",
+                description: "Durante el proceso, la entrada se convierte en algo diferente, agregando valor. Por ejemplo, una materia prima se convierte en un producto."
+            },
+            {
+                visual: "✅",
+                sectionTitle: "¿Qué es un Proceso?",
+                title: "Salida o Resultado",
+                description: "El proceso termina al obtener un resultado final, un producto o un servicio (salida), que satisface la necesidad inicial."
+            },
+            // Pasos para los estados de un proceso
+            {
+                visual: "➕",
+                sectionTitle: "¿Qué es un Proceso?",
+                title: "Estado: Nuevo",
+                description: "El proceso está siendo creado y aún no está listo para ser ejecutado."
+            },
+            {
+                visual: "⏳",
+                sectionTitle: "¿Qué es un Proceso?",
+                title: "Estado: Listo",
+                description: "El proceso está a la espera de ser asignado a la CPU para su ejecución."
+            },
+            {
+                visual: "🏃",
+                sectionTitle: "¿Qué es un Proceso?",
+                title: "Estado: En Ejecución",
+                description: "El proceso está utilizando la CPU en este momento y sus instrucciones se están llevando a cabo."
+            },
+            {
+                visual: "😴",
+                sectionTitle: "¿Qué es un Proceso?",
+                title: "Estado: Bloqueado/Espera",
+                description: "El proceso ha sido detenido temporalmente, esperando que ocurra un evento (ej. completar una operación de entrada/salida)."
+            },
+            {
+                visual: "🛑",
+                sectionTitle: "¿Qué es un Proceso?",
+                title: "Estado: Terminado",
+                description: "El proceso ha completado su ejecución. Ya no está activo en el sistema."
+            },
+            // Pasos sobre el procesador
+            {
+                visual: "👌",
+                sectionTitle: "¿Qué es un Procesador?",
+                title: "Conclusión de 'Proceso'",
+                description: "En resumen, un proceso es una serie de pasos organizados que transforman una entrada en una salida, pasando por distintos estados en el sistema."
+            },
+            {
+                visual: "🧠",
+                sectionTitle: "¿Qué es un Procesador?",
+                title: "¿Y el Procesador?",
+                description: "Ahora que sabemos qué es un proceso, ¿qué lo hace funcionar? Conozcamos al protagonista."
+            },
+            {
+                visual: "🖥️",
+                sectionTitle: "¿Qué es un Procesador?",
+                title: "El Cerebro de la PC",
+                description: "El **procesador (CPU)** es el componente que ejecuta las instrucciones y operaciones de los programas. Es el 'cerebro' de la computadora."
+            },
+            {
+                visual: "⚡",
+                sectionTitle: "¿Qué es un Procesador?",
+                title: "Ejecución de un Proceso",
+                description: "Un proceso pasa del estado 'Listo' a 'En Ejecución' cuando el procesador le asigna un tiempo para trabajar."
+            },
+            {
+                visual: "⏰",
+                sectionTitle: "¿Qué es un Procesador?",
+                title: "Trabajo por Turnos",
+                description: "El procesador es muy rápido y puede alternar entre varios procesos, dándoles a cada uno un turno para ejecutarse. Esto se llama multitarea."
+            },
+            // Cierre de la idea del procesador
+            {
+                visual: "💯",
+                sectionTitle: "La Gestión del Sistema Operativo",
+                title: "Cerrando la idea del Procesador",
+                description: "El procesador ejecuta las instrucciones de los procesos. Sin embargo, no actúa solo, necesita a un gran director para coordinar todo: el Sistema Operativo."
+            },
+            // Nuevos pasos sobre la gestión del Sistema Operativo
+            {
+                visual: "🏛️",
+                sectionTitle: "La Gestión del Sistema Operativo",
+                title: "La Gestión del Sistema Operativo",
+                description: "El Sistema Operativo es como el director de orquesta. Es el responsable de organizar y administrar todos los recursos de la computadora para que los procesos funcionen de forma eficiente."
+            },
+            {
+                visual: "📋",
+                sectionTitle: "La Gestión del Sistema Operativo",
+                title: "Planificación (Scheduling)",
+                description: "El SO decide qué proceso se ejecuta en qué momento. Es como un árbitro que asigna el tiempo del procesador para que nadie se quede atrás."
+            },
+            {
+                visual: "🗃️",
+                sectionTitle: "La Gestión del Sistema Operativo",
+                title: "Gestión de Memoria",
+                description: "El SO asigna y libera espacio en la memoria RAM para cada proceso, asegurando que no se solapen y que cada uno tenga el espacio que necesita."
+            },
+            {
+                visual: "📂",
+                sectionTitle: "La Gestión del Sistema Operativo",
+                title: "Gestión de Archivos",
+                description: "El SO organiza el almacenamiento de datos. Controla cómo se guardan, nombran y acceden los archivos y carpetas, permitiendo un uso ordenado."
+            },
+            // Cierre de la idea del SO
+            {
+                visual: "🤝",
+                sectionTitle: "Hilos y Sincronización",
+                title: "Conclusión de Gestión del SO",
+                description: "El Sistema Operativo garantiza que los procesos se ejecuten de manera justa y eficiente al administrar la CPU, la memoria y los archivos."
+            },
+            // Nuevos pasos sobre Hilos y Sincronización
+            {
+                visual: "🧵",
+                sectionTitle: "Hilos y Sincronización",
+                title: "¿Qué son los Hilos?",
+                description: "Un hilo es una unidad más pequeña de un proceso. Piensa en un proceso como un programa completo y en los hilos como las tareas individuales dentro de ese programa."
+            },
+            {
+                visual: "🚦",
+                sectionTitle: "Hilos y Sincronización",
+                title: "La Sincronización",
+                description: "La sincronización es necesaria cuando múltiples hilos intentan acceder al mismo recurso al mismo tiempo. Ayuda a evitar conflictos y la corrupción de datos."
+            },
+            {
+                visual: "🔒",
+                sectionTitle: "Hilos y Sincronización",
+                title: "Mecanismos de Sincronización",
+                description: "El sistema operativo utiliza herramientas como semáforos, bloqueos (locks) y exclusiones mutuas (mutex) para garantizar que solo un hilo acceda al recurso compartido a la vez."
+            },
+            // Paso final del micro interactivo
+            {
+                visual: "🔄",
+                sectionTitle: "¡Fin!",
+                title: "¡Fin!",
+                description: "¡Has terminado! Esta es la relación entre procesos, el procesador, el sistema operativo y los hilos. Presiona para reiniciar.",
+                isFinal: true
+            }
+        ];
+
+        // Variables de estado y elementos del DOM
+        let currentStepIndex = 0;
+        const visualEl = document.getElementById('visual');
+        const stepTitleEl = document.getElementById('stepTitle');
+        const descriptionEl = document.getElementById('description');
+        const nextBtn = document.getElementById('nextBtn');
+        const contentEl = document.getElementById('content');
+        const mainTitleEl = document.getElementById('mainTitle');
+
+        /**
+         * Función para actualizar el contenido de la interfaz.
+         */
+        function updateContent() {
+            // Añadir clase para la animación de salida
+            contentEl.classList.add('step-hide');
+            
+            // Esperar a que la animación de salida termine para cambiar el contenido
+            setTimeout(() => {
+                const step = steps[currentStepIndex];
+                
+                // Actualizar el título principal de la sección
+                if (mainTitleEl.textContent !== step.sectionTitle) {
+                    mainTitleEl.textContent = step.sectionTitle;
+                }
+
+                visualEl.textContent = step.visual;
+                stepTitleEl.textContent = step.title;
+                descriptionEl.textContent = step.description;
+                
+                // Actualizar el texto del botón
+                if (step.isFinal) {
+                    nextBtn.textContent = 'Reiniciar';
+                } else {
+                    nextBtn.textContent = 'Siguiente';
+                }
+
+                // Quitar clase para la animación de entrada
+                contentEl.classList.remove('step-hide');
+            }, 300); // El tiempo debe coincidir con la duración de la transición en el CSS
+        }
+
+        /**
+         * Manejador de eventos para el botón "Siguiente".
+         */
+        nextBtn.addEventListener('click', () => {
+            // Incrementar el índice del paso. Si es el último, reiniciar a 0.
+            if (currentStepIndex === steps.length - 1) {
+                currentStepIndex = 0;
+            } else {
+                currentStepIndex++;
+            }
+            updateContent();
+        });
+
+        // Iniciar la interfaz con el primer paso
+        document.addEventListener('DOMContentLoaded', updateContent);
+    </script>
+</body>
+</html>
